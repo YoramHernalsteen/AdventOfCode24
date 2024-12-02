@@ -422,3 +422,5 @@ fabric.properties
 
 AdventOfCode24/obj/
 AdventOfCode24/bin/
+
+.env
