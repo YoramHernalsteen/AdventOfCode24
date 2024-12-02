@@ -13,20 +13,13 @@ namespace AdventOfCode24.AdventDays
         public static int Solve()
         {
             var data = Core.ConvertFileTo2dListInt("DayTwo");
-            var safeLines = 0;
-            foreach (var numberList in data)
-            {
-                if (IsNumberListSafe(numberList)) safeLines++;
-
-            }
-            return safeLines;
+            return data.Count(IsNumberListSafe);
         }
 
         public static int SolveExtra()
         {
             var data = Core.ConvertFileTo2dListInt("DayTwo");
             var safeLines = 0;
-            var failedNumberLists = new Dictionary<int, List<int>>();
             foreach (var numberList in data)
             {
                 if (IsNumberListSafe(numberList))
@@ -52,9 +45,8 @@ namespace AdventOfCode24.AdventDays
         private static bool IsNumberListSafe(List<int> numberList)
         {
             var isSafe = true;
-            var errorIndex = -1;
             var movement = Movement.Increasing;
-            for (int i = 0; i < numberList.Count - 1; i++)
+            for (var i = 0; i < numberList.Count - 1; i++)
             {
                 var currentNumber = numberList[i];
                 var nextNumber = numberList[i + 1];
@@ -62,7 +54,6 @@ namespace AdventOfCode24.AdventDays
                 if (Math.Abs(currentNumber - nextNumber) > 3 || currentNumber == nextNumber)
                 {
                     isSafe = false;
-                    errorIndex = i;
                     break;
                 }
 
@@ -73,32 +64,16 @@ namespace AdventOfCode24.AdventDays
                 else
                 {
                     var nextMovement = currentNumber > nextNumber ? Movement.Decreasing : Movement.Increasing;
-                    if (movement != nextMovement) { isSafe = false; errorIndex = i; break; }
+                    if (movement != nextMovement)
+                    {
+                        isSafe = false; 
+                        break;
+                    }
                     movement = nextMovement;
                 }
             }
 
             return isSafe;
-        }
-
-        private static void PrintResult(List<int> data, bool success, List<int> errorindexes, bool retry)
-        {
-            var str = string.Join(" ", data);
-            if (success)
-            {
-                str = "SUCCESS " + str;
-            } else
-            {
-                str = "FAILED " + str;
-            }
-
-            str = str + " ERRORS AT [" + string.Join(", ", errorindexes) + "]";
-
-            if (retry)
-            {
-                str += " RETRY";
-            }
-            Console.WriteLine(str);
         }
     }
 
