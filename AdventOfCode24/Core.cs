@@ -11,4 +11,17 @@ public static class Core
         var lines = File.ReadAllLines(file);
         return lines.ToList();
     }
+
+    public static List<List<int>> ConvertFileTo2dListInt(string filename, string separator = " ")
+    {
+        var lines = ConvertFileToLines(filename);
+        var list = new List<List<int>>();
+        foreach (var line in lines)
+        {
+            var innerList = line.Split(separator).Select(x => int.Parse(x)).ToList();
+            list.Add(innerList);
+        }
+
+        return list;    
+    }
 }
