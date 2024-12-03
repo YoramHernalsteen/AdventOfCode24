@@ -12,6 +12,12 @@ public static class Core
         return lines.ToList();
     }
 
+    public static string ConvertFileToText(string filename)
+    {
+        var lines = ConvertFileToLines(filename);
+        return string.Join("", lines);
+    }
+
     public static List<List<int>> ConvertFileTo2dListInt(string filename, string separator = " ")
     {
         var lines = ConvertFileToLines(filename);

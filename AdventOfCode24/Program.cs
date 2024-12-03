@@ -8,7 +8,7 @@ class Program
     {
         var loaded = DotNetEnv.Env.Load();
 
-        Console.WriteLine($"EASY: {DayTwo.Solve()}");
-        Console.WriteLine($"EXTRA: {DayTwo.SolveExtra()}");
+        Console.WriteLine($"EASY: {DayThree.Solve()}");
+        Console.WriteLine($"EXTRA: {DayThree.SolveExtra()}");
     }
 }
