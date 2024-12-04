@@ -9,40 +9,34 @@ namespace AdventOfCode24.AdventDays
 {
     public static class Day4
     {
-        private static readonly List<string> _directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+        private static readonly List<int> _directions = [-1, 0, 1];
 
-        public static int Solve()
+        public static int Solve(bool isPartTwo = false)
         {
-            var data = Core.ConvertFileTo2dListChar("Day4");
-            // save the start and endpoint in a dict
-            var resultList = new List<SearchResult>();
+            var data = Core.ConvertFileTo2dListChar();
+            var found = 0;
             for (var y = 0; y < data.Count; y++)
             {
                 for (var x = 0; x < data[y].Count; x++)
                 {
-                    var results = checkForStringInAllDirections("XMAS", new Point(x, y), data);
-                    foreach (var result in results)
+                    if (!isPartTwo)
                     {
-                        if(resultList.Any(x => x.endpoint.Equals(result.endpoint) && x.startpoint.Equals(result.startpoint)))
-                        {
-                            continue;
-                        }
-
-                        if (resultList.Any(x => x.endpoint.Equals(result.startpoint) && x.startpoint.Equals(result.endpoint)))
-                        {
-                            continue;
-                        }
-                        resultList.Add(result);
+                        if (data[y][x] != 'X') continue;
+                        found += CheckForStringInAllDirections("XMAS", new Point(x, y), data);
+                    }
+                    else
+                    {
+                        if (data[y][x] != 'A') continue;
+                        found += CheckForCross(new Point(x, y), data);
                     }
                 }
             }
-
-            return resultList.Count;
+            return found;
         }
 
         public static int SolveExtra()
         {
-            return 0;
+            return Solve(true);
         }
 
         private static bool IsPointBetweenBoundaries(int x, int y, List<List<char>> data)
@@ -65,40 +59,63 @@ namespace AdventOfCode24.AdventDays
             return true;
         }
 
-        private static List<SearchResult> checkForStringInAllDirections(string stringToSearch, Point currentPoint, List<List<char>> data)
+        private static int CheckForStringInAllDirections(string stringToSearch, Point currentPoint, List<List<char>> data)
         {
-            var strLength = stringToSearch.Length - 1;
-            var results = new List<SearchResult>();
-            foreach (var direction in _directions)
+            var found = 0;
+            foreach (var xDirection in _directions)
             {
-                var point = new Point(currentPoint.x, currentPoint.y);
-                var foundStr = $"{data[point.y][point.x]}";
-                for (var i = 0; i < strLength; i++)
+                foreach (var yDirection in _directions)
                 {
-                    point = GetNextPointInDirection(direction, data, point);
-                    if (!IsPointBetweenBoundaries(point.x, point.y, data)) break;
-                    foundStr += data[point.y][point.x];
-                }
-                if (foundStr == stringToSearch || new string(foundStr.Reverse().ToArray()) == stringToSearch)
-                {
-                    results.Add(new SearchResult(point, currentPoint));
+                    if(xDirection == 0 && yDirection == 0) continue;
+                    var point = new Point(currentPoint.x, currentPoint.y);
+                    var foundStr = $"{data[point.y][point.x]}";
+                    
+                    for (var i = 0; i < stringToSearch.Length - 1; i++)
+                    {
+                        point.x += xDirection;
+                        point.y += yDirection;
+                        if (!IsPointBetweenBoundaries(point.x, point.y, data)) break;
+                        foundStr += data[point.y][point.x];
+                    }
+                    
+                    if (foundStr == stringToSearch || new string(foundStr.Reverse().ToArray()) == stringToSearch)
+                    {
+                        found++;
+                    }
                 }
             }
-            return results;
+            
+            return found;
         }
-
-        private static Point GetNextPointInDirection(string direction, List<List<char>> data, Point point)
+        
+        private static int CheckForCross(Point currentPoint, List<List<char>> data)
         {
-            if (direction == "N") return new Point(point.x, point.y + 1);
-            else if (direction == "NE") return new Point(point.x + 1, point.y + 1);
-            else if (direction == "E") return new Point(point.x + 1, point.y);
-            else if (direction == "SE") return new Point(point.x + 1, point.y - 1);
-            else if (direction == "S") return new Point(point.x, point.y - 1);
-            else if (direction == "SW") return new Point(point.x + 1 - 1, point.y - 1);
-            else if (direction == "W") return new Point(point.x - 1, point.y);
-            else if (direction == "NW") return new Point(point.x - 1, point.y + 1);
-            return new Point(-1, -1);
+            var topLeft = new Point(currentPoint.x -1, currentPoint.y -1);
+            var topRight = new Point(currentPoint.x + 1, currentPoint.y -1);
+            var bottomLeft = new Point(currentPoint.x - 1, currentPoint.y + 1);
+            var bottomRight = new Point(currentPoint.x + 1, currentPoint.y + 1);
+            
+            foreach (var point in new List<Point>(){topLeft, topRight, bottomLeft, bottomRight})
+            {
+                if (!IsPointBetweenBoundaries(point.x, point.y, data))
+                {
+                    return 0;
+                }
+            }
+
+            var diagonal1 = $"{data[topLeft.y][topLeft.x]}{data[bottomRight.y][bottomRight.x]}";
+            var diagonal2 = $"{data[topRight.y][topRight.x]}{data[bottomLeft.y][bottomLeft.x]}";
+            foreach (var str in new List<string>() { diagonal1, diagonal2 })
+            {
+                if (str != "SM" && str != "MS")
+                {
+                    return 0;
+                }
+            }
+            
+            return 1;
         }
+        
     }
 
     public class Point
@@ -109,31 +126,6 @@ namespace AdventOfCode24.AdventDays
         {
             this.x = x;
             this.y = y;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Point point &&
-                   x == point.x &&
-                   y == point.y;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(x, y);
-        }
-    }
-
-    public class SearchResult
-    {
-        public Point endpoint;
-        public Point startpoint;
-
-
-        public SearchResult(Point endpoint, Point startpoint)
-        {
-            this.endpoint = endpoint;
-            this.startpoint = startpoint;
         }
     }
 }

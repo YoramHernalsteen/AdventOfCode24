@@ -3,24 +3,22 @@ namespace AdventOfCode24;
 public static class Core
 {
     
-    public static List<string> ConvertFileToLines(string filename)
+    public static List<string> ConvertFileToLines()
     {
-        var directory = DotNetEnv.Env.GetString("INPUT_DIR");
-        var file = Path.Combine(directory, filename);
-        file += ".txt";
+        var file = DotNetEnv.Env.GetString("INPUT_FILE");
         var lines = File.ReadAllLines(file);
         return lines.ToList();
     }
 
-    public static string ConvertFileToText(string filename)
+    public static string ConvertFileToText()
     {
-        var lines = ConvertFileToLines(filename);
+        var lines = ConvertFileToLines();
         return string.Join("", lines);
     }
 
-    public static List<List<int>> ConvertFileTo2dListInt(string filename, string separator = " ")
+    public static List<List<int>> ConvertFileTo2dListInt(string separator = " ")
     {
-        var lines = ConvertFileToLines(filename);
+        var lines = ConvertFileToLines();
         var list = new List<List<int>>();
         foreach (var line in lines)
         {
@@ -31,9 +29,9 @@ public static class Core
         return list;    
     }
 
-    public static List<List<char>> ConvertFileTo2dListChar(string filename)
+    public static List<List<char>> ConvertFileTo2dListChar()
     {
-        var lines = ConvertFileToLines(filename);
+        var lines = ConvertFileToLines();
         var list = new List<List<char>>();
         foreach (var line in lines)
         {

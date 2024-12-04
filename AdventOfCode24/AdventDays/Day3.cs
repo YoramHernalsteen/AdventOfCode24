@@ -2,13 +2,13 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode24.AdventDays;
 
-public static class DayThree
+public static class Day3
 {
     public static int Solve(bool checkForEnableInstructions = false)
     {
         const string multiplicationRegex = @"mul\((\d+),(\d+)\)";
         const string enableInstructionRegex = @"do\(\)|don't\(\)";
-        var text = Core.ConvertFileToText("DayThree");
+        var text = Core.ConvertFileToText();
         var sum = 0;
         
         var instructions = Regex.Matches(text, enableInstructionRegex);
@@ -41,7 +41,6 @@ public static class DayThree
             if (lastEnableInstruction > lastDisableInstruction)
             {
                 sum += int.Parse(match.Groups[1].Value) * int.Parse(match.Groups[2].Value);
-                continue;
             }
                 
         }

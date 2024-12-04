@@ -1,10 +1,10 @@
 namespace AdventOfCode24.AdventDays;
 
-public static class DayOne
+public static class Day1
 {
     public static int Solve()
     {
-        var inputLines = Core.ConvertFileToLines("DayOne");
+        var inputLines = Core.ConvertFileToLines();
         var firstList = GetFirstList(inputLines);
         var secondList = GetSecondList(inputLines);
         
@@ -16,7 +16,7 @@ public static class DayOne
 
     public static int SolveExtra()
     {
-        var inputLines = Core.ConvertFileToLines("DayOne");
+        var inputLines = Core.ConvertFileToLines();
         var firstList = GetFirstList(inputLines);
         var secondList = GetSecondList(inputLines);
         
