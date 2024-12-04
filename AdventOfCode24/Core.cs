@@ -30,4 +30,17 @@ public static class Core
 
         return list;    
     }
+
+    public static List<List<char>> ConvertFileTo2dListChar(string filename)
+    {
+        var lines = ConvertFileToLines(filename);
+        var list = new List<List<char>>();
+        foreach (var line in lines)
+        {
+            var innerList = line.ToCharArray().ToList();
+            list.Add(innerList);
+        }
+
+        return list;
+    }
 }
