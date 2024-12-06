@@ -41,4 +41,21 @@ public static class Core
 
         return list;
     }
+    
+    public static char [,] ConvertFileTo2dArrayChar()
+    {
+        var lines = ConvertFileToLines();
+        var yBound = lines.Count;
+        var xBound = lines.First().Length;
+        var arr = new char[yBound, xBound];
+        for (var i = 0; i < lines.Count; i++)
+        {
+            for (var j = 0; j < lines.Count; j++)
+            {
+                arr[i, j] = lines[i][j];
+            }
+        }
+        
+        return arr;
+    }
 }
