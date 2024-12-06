@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AdventOfCode24.Models;
 
 namespace AdventOfCode24.AdventDays
 {
@@ -39,26 +40,6 @@ namespace AdventOfCode24.AdventDays
             return Solve(true);
         }
 
-        private static bool IsPointBetweenBoundaries(int x, int y, List<List<char>> data)
-        {
-            var ybound = data.Count;
-            if (x < 0 || y < 0)
-            {
-                return false;
-            }
-            if (ybound <= y)
-            {
-                return false;
-            }
-            var xbound = data[y].Count;
-
-            if (xbound <= x)
-            {
-                return false;
-            }
-            return true;
-        }
-
         private static int CheckForStringInAllDirections(string stringToSearch, Point currentPoint, List<List<char>> data)
         {
             var found = 0;
@@ -74,7 +55,7 @@ namespace AdventOfCode24.AdventDays
                     {
                         point.x += xDirection;
                         point.y += yDirection;
-                        if (!IsPointBetweenBoundaries(point.x, point.y, data)) break;
+                        if (!Point.IsPointBetweenBoundaries(point, data)) break;
                         foundStr += data[point.y][point.x];
                     }
                     
@@ -97,7 +78,7 @@ namespace AdventOfCode24.AdventDays
             
             foreach (var point in new List<Point>(){topLeft, topRight, bottomLeft, bottomRight})
             {
-                if (!IsPointBetweenBoundaries(point.x, point.y, data))
+                if (!Point.IsPointBetweenBoundaries(point, data))
                 {
                     return 0;
                 }
@@ -116,16 +97,5 @@ namespace AdventOfCode24.AdventDays
             return 1;
         }
         
-    }
-
-    public class Point
-    {
-        public int x;
-        public int y;
-        public Point(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
     }
 }
