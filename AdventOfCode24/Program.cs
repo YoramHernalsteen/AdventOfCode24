@@ -1,21 +1,27 @@
 ﻿using System.Diagnostics;
 using AdventOfCode24.AdventDays;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 namespace AdventOfCode24;
 
-class Program
+public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var loaded = DotNetEnv.Env.Load();
-        
-        var watch = Stopwatch.StartNew();
-        Console.WriteLine($"EASY: {Day9.Solve()}");
-        watch.Stop();
-        Console.WriteLine($"Took {watch.Elapsed.TotalMilliseconds} milliseconds");
-        var watch2 = Stopwatch.StartNew();
-        Console.WriteLine($"EXTRA: {Day9.SolveExtra()}");
-        watch2.Stop();
-        Console.WriteLine($"Took {watch2.Elapsed.TotalMilliseconds} milliseconds");
+        BenchmarkRunner.Run<Solver>();
+        PartOne();
+        PartTwo();
+    }
+
+    private static void PartOne()
+    {
+        new Solver().PartOne();
+    }
+    
+    private static void PartTwo()
+    {
+        new Solver().PartTwo();
     }
 }

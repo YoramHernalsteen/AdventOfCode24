@@ -6,40 +6,44 @@ public static class Day9
     {
         var data = Core.ConvertFileToListInt();
         var fileSystem = new List<int>();
-        var emptyPlaces = new List<int>();
-        var filledPlaces = new List<int>();
         var id = 0;
         for (var i = 0; i < data.Count; i+=2)
         {
             
             for (var j = 0; j < data[i]; j++)
             {
-                filledPlaces.Add(fileSystem.Count);
                 fileSystem.Add(id);
             }
             if (i + 1 < data.Count)
             {
                 for (var j = 0; j < data[i + 1]; j++)
                 {
-                    emptyPlaces.Add(fileSystem.Count);
                     fileSystem.Add(-1);
                 }
             }
 
             id++;
         }
-        
-        while (emptyPlaces.Count > 0)
+
+        var i1 = 0;
+        var i2 = fileSystem.Count - 1;
+
+        while (i1 < i2)
         {
-            var lastIndex = filledPlaces.Last();
-            var firstEmptyIndex = emptyPlaces.First();
-            if(firstEmptyIndex > lastIndex) break;
-            filledPlaces.Remove(lastIndex);
-            var lastFile = fileSystem[lastIndex];
-            fileSystem[lastIndex] = -1;
-            fileSystem[firstEmptyIndex] = lastFile;
-            emptyPlaces.Remove(firstEmptyIndex);
-        }   
+            if (fileSystem[i1] != -1)
+            {
+                i1++;
+                continue;
+            }
+            if (fileSystem[i2] == -1)
+            {
+                i2--;
+                continue;
+            }
+            
+            (fileSystem[i1], fileSystem[i2]) = (fileSystem[i2], fileSystem[i1]);
+        }
+        
         fileSystem.RemoveAll(x => x == -1);
         return fileSystem.Select((x, i) => (long)(x * i)).Sum();
     }
