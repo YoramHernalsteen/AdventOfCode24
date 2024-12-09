@@ -2,6 +2,10 @@ namespace AdventOfCode24.AdventDays;
 
 public static class Day7
 {
+    // probably could be faster if working backwards and using recursion iso calculating possibilities ahead of time...
+    // total must be divisible by next
+    // total and next must be concatable
+    // total minus next must be positive
     public static long Solve(bool solvePartTwo = false)
     {
         var data = Core.ConvertFileToLines();
