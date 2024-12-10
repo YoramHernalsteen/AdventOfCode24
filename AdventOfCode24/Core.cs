@@ -29,6 +29,19 @@ public static class Core
         return list;    
     }
 
+    public static List<List<int>> ConvertFileTo2dListInt()
+    {
+        var lines = ConvertFileToLines();
+        var list = new List<List<int>>();
+        foreach (var line in lines)
+        {
+            var innerList = line.Select(x => int.Parse(x.ToString())).ToList();
+            list.Add(innerList);
+        }
+
+        return list;
+    }
+
     public static List<int> ConvertFileToListInt()
     {
         var data = ConvertFileToLines();

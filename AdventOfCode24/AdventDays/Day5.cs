@@ -13,6 +13,7 @@ public static class Day5
         {
             if (IsValidManual(manual, rules) && !part2)
             {
+                Console.WriteLine(string.Join(',', manual));
                 result += manual[(manual.Count / 2)];
             } else if (!IsValidManual(manual, rules) && part2)
             {

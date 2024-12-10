@@ -12,13 +12,13 @@ namespace AdventOfCode24.AdventDays
     {
         public static int Solve()
         {
-            var data = Core.ConvertFileTo2dListInt();
+            var data = Core.ConvertFileTo2dListInt(" ");
             return data.Count(IsNumberListSafe);
         }
 
         public static int SolveExtra()
         {
-            var data = Core.ConvertFileTo2dListInt();
+            var data = Core.ConvertFileTo2dListInt(" ");
             var safeLines = 0;
             foreach (var numberList in data)
             {

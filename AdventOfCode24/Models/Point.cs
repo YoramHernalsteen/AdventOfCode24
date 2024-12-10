@@ -31,7 +31,7 @@ public class Point
         return IsPointBetweenBoundaries(point.x, point.y, data);
     }
     
-    public static bool IsPointBetweenBoundaries(int x, int y, List<List<char>> data)
+    public static bool IsPointBetweenBoundaries<T>(int x, int y, List<List<T>> data)
     {
         var yBound = data.Count;
         if (x < 0 || y < 0)
