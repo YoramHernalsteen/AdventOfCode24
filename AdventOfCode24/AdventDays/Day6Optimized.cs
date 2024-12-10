@@ -10,43 +10,56 @@ public static class Day6Optimized
     private static readonly int Left = 3;
     
     
-    public static int Solve(bool part2 = false)
+    public static int Solve()
     {
         var grid = Core.ConvertFileTo2dArrayChar();
         var (startPointX, startPointY) = Find(grid, '^');
 
         var route = GetRoute(startPointX, startPointY, grid);
-        if (!part2) return route.Count;
+        return route.Count;
+    }
+
+    
+    // we can make it faster by starting the route just before the block you place
+    public static int SolveExtra()
+    {
+        var grid = Core.ConvertFileTo2dArrayChar();
+        var (startPointX, startPointY) = Find(grid, '^');
+        var route = GetRouteWithDirection(startPointX, startPointY, grid);
         
-        // for part 2, check for each point in the route if it leads to an infinite loop
-        // meaning no out of bounds and visit the same cell twice from the same direction
+        var visited = new HashSet<(int, int)>();
+        
         var infiniteLoops = 0;
-        foreach (var (pointX, pointY) in route)
+        foreach (var (pointX, pointY, direction) in route)
         {
+            if (visited.Contains((pointX, pointY))) continue;
+            
+            visited.Add((pointX, pointY));
+            
             if (grid[pointY, pointX] != '.')
             {
                 continue;
             }
             grid[pointY, pointX] = '#';
             // do calculation
-            if(IsInfiniteLoop(startPointX, startPointY, grid)) infiniteLoops++;
+            var (previousX, previousY) = Move(pointX, pointY, direction, moveBack:true);
+            if(IsInfiniteLoop(previousX, previousY, grid, direction)) infiniteLoops++;
             // return to grid as it was
             grid[pointY, pointX] = '.';
         }
         return infiniteLoops;
     }
 
-    public static int SolveExtra()
+    private static (int, int) Move(int x, int y, int direction, bool moveBack = false)
     {
-        return Solve(true);
-    }
-
-    private static (int, int) Move(int x, int y, int direction)
-    {
-        if (direction == Up) y--;
-        else if (direction == Down) y++;
-        else if (direction == Left) x--;
-        else if (direction == Right) x++;
+        if (direction == Up && !moveBack) return(x, --y);
+        else if (direction == Down && !moveBack) return (x, ++y);
+        else if (direction == Left && !moveBack) return (--x, y);
+        else if (direction == Right && !moveBack)return (++x, y);
+        else if (direction == Up && moveBack) return(x, ++y);
+        else if (direction == Down && moveBack) return (x, --y);
+        else if (direction == Left && moveBack) return (++x, y);
+        else if (direction == Right && moveBack)return (--x, y);
         
         return (x, y);
     }
@@ -56,9 +69,8 @@ public static class Day6Optimized
         return (direction + 1) % 4;
     }
     
-    private static bool IsInfiniteLoop(int pointX, int pointY, char [,] grid)
+    private static bool IsInfiniteLoop(int pointX, int pointY, char [,] grid, int direction)
     {
-        var direction = Up;
         var startPointX = pointX;
         var startPointY = pointY;
         var (nextPointX, nextPointY) = Move(pointX, pointY, direction);
@@ -108,6 +120,29 @@ public static class Day6Optimized
         return route;
     }
 
+    private static List<(int, int, int)> GetRouteWithDirection(int x, int y, char [,] grid)
+    {
+        var route = new List<(int, int, int)>{(x, y, Up) };
+        var direction = Up;
+        
+        var (nextX, nextY) = Move(x, y, direction);
+        while (Point.IsPointBetweenBoundaries(nextX, nextY, grid))
+        {
+            if (grid[nextY, nextX] == '#')
+            {
+                direction = ChangeDirection(direction);
+                (nextX, nextY) = Move(x, y, direction);
+                continue;
+            }
+            route.Add((nextX, nextY, direction));
+            x = nextX;
+            y = nextY;
+            (nextX, nextY) = Move(x, y, direction);
+        }
+        return route;
+    }
+    
+    
     private static (int, int) Find(char[,] grid, char character)
     {
         for (var y = 0; y < grid.GetLength(0); y++)
