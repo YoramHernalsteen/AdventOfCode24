@@ -8,12 +8,12 @@ public class Solver
     [Benchmark]
     public void PartOne()
     {
-        Console.WriteLine($"EASY: {Day6Optimized.Solve()}");
+        Console.WriteLine($"EASY: {Day11.Solve()}");
     }
     
     [Benchmark]
     public void PartTwo()
     {
-        Console.WriteLine($"EXTRA: {Day6Optimized.SolveExtra()}");
+        Console.WriteLine($"EXTRA: {Day11.SolveExtra()}");
     }
 }
